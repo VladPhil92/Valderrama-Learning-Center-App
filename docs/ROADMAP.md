@@ -8,7 +8,7 @@ Los hitos son **secuenciales por evidencia**, no fechas comprometidas.
 - [x] Diseño de interfaz estática responsive y buscador de docentes ficticios.
 - [x] Reglas de negocio y borradores de políticas.
 - [x] Test básico de filtrado y control ilustrativo de solicitud.
-- [ ] Creación del repositorio remoto en GitHub y publicación del primer commit.
+- [x] Creación del repositorio remoto en GitHub y publicación del primer commit.
 - [ ] Revisión de marca, experiencia de usuario y alcance del negocio.
 
 ## Fase 1 — Identidad y validación
