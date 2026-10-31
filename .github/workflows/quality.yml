@@ -1,4 +1,4 @@
-name: Calidad básica
+name: Calidad de Valderrama Learning Center
 on:
   push:
   pull_request:
@@ -10,4 +10,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm run check
+      - name: Pruebas, sintaxis y build
+        run: npm run check
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Tipado de Edge Function (no despliega)
+        run: deno check --config supabase/functions/review-application/deno.json supabase/functions/review-application/index.ts
