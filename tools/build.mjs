@@ -1,0 +1,10 @@
+import { mkdir, copyFile, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+const out = 'dist';
+await rm(out, { recursive: true, force: true });
+await mkdir(join(out,'src'), { recursive: true });
+await mkdir(join(out,'docs'), { recursive: true });
+await Promise.all(['index.html', 'styles.css'].map(file => copyFile(file,join(out,file))));
+await Promise.all(['app.js','data.js','filters.js'].map(file => copyFile(join('src',file),join(out,'src',file))));
+await Promise.all(['CODIGO_CONDUCTA.md','REGLAMENTO_INTERNO.md','PRIVACIDAD_BORRADOR.md','PROTECCION_INFANCIA.md'].map(file => copyFile(join('docs',file),join(out,'docs',file))));
+console.log('Dist generado: archivos estáticos listos. No es una plataforma de producción.');
