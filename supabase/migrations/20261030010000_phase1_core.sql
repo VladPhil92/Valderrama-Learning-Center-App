@@ -201,8 +201,10 @@ create policy "guardian reads review of own learner" on public.guardian_reviews
  exists(select 1 from public.staff_members s where s.user_id=(select auth.uid())
  and s.staff_role in ('safeguarding','admin')));
 
-create policy "public sees approved tutor only" on public.tutor_profiles
- for select to anon, authenticated using (
+create policy "anonymous reads approved tutors only" on public.tutor_profiles
+ for select to anon using (public_visible);
+create policy "authenticated reads own, approved or reviewable tutors" on public.tutor_profiles
+ for select to authenticated using (
  public_visible or user_id = (select auth.uid()) or
  exists(select 1 from public.staff_members s where s.user_id=(select auth.uid())
  and s.staff_role in ('reviewer','admin')));
