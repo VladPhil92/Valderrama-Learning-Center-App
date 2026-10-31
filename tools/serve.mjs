@@ -31,7 +31,7 @@ createServer(async(req,res)=>{
      'X-Content-Type-Options':'nosniff',
      'Referrer-Policy':'strict-origin-when-cross-origin',
      'Cache-Control':path==='/portal/config.js'?'no-store':'no-cache',
-     'Content-Security-Policy':"default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; img-src 'self' data:; script-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'",
+     'Content-Security-Policy':"default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; script-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'",
    }).end(body);
  }catch(err){console.error(err);res.writeHead(500).end('Error interno');}
 }).listen(port,()=>console.log('Valderrama Learning Center http://localhost:'+port));

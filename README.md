@@ -4,7 +4,7 @@
 
 Valderrama Learning Center es un proyecto de plataforma digital para conectar **familias, estudiantes universitarios y personas adultas** con **tutores y profesores especializados**. Atiende todas las edades y asignaturas, con controles reforzados cuando participan menores de 18 años.
 
-**Estado (30 de octubre de 2026):** `v0.1.0` — **prototipo navegable, exclusivamente demostrativo**. No tiene autenticación, reservas reales, pagos, mensajería, verificación de docentes ni almacenamiento de datos de usuarios. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
+**Estado (30 de octubre de 2026):** `v0.2.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
 
 ## Qué contiene
 
@@ -15,6 +15,17 @@ Valderrama Learning Center es un proyecto de plataforma digital para conectar **
 - Requisitos propuestos para el registro de tutores: fotografía, formación y récord académico, especialidades, identidad y acreditaciones.
 - Documentos iniciales de producto, protección de infancia, código de conducta, reglamento interno, privacidad, arquitectura y hoja de ruta.
 - Pruebas automatizadas de filtros y regla de autorización, más workflow de GitHub Actions.
+
+## Portal de cuentas y Fase 1
+
+La nueva ruta [`portal/index.html`](portal/index.html) incorpora:
+- Registro e ingreso de adultos mediante Supabase Auth, con credenciales y permisos verificados por backend.
+- Perfil familiar con apodos educativos privados de menores y estado de representación pendiente.
+- Perfil docente, fotografía privada, acreditaciones y solicitud de revisión humana.
+- Revisión con roles de personal y tickets de evidencia mediante Edge Function.
+- Diez tablas PostgreSQL protegidas con RLS y dos buckets privados.
+
+**Requiere configuración adicional.** No existen cuentas habilitadas ni base real para esta app. Consultar [`FASE1_INSTALACION.md`](docs/FASE1_INSTALACION.md) para crear proyecto Supabase dedicado, aplicar migraciones, desplegar función y probar seguridad. No se reutilizaron proyectos ajenos existentes.
 
 ## Ejecutar el prototipo
 
@@ -32,7 +43,7 @@ npm run build   # Genera dist/ para sitio estático
 npm run check   # Pruebas + compilación
 ```
 
-El código es HTML, CSS y JavaScript estándar. No hay backend. El formulario es ilustrativo y no transmite datos.
+El catálogo inicial sigue siendo estático y ficticio. La sección `/portal/` usa el backend Supabase solo después de configurar las variables publicables, aplicar migraciones y desplegar la Edge Function. No contiene secretos ni usuarios precargados.
 
 ## Principios del producto
 
@@ -56,6 +67,7 @@ Los menores **no tendrán cuentas públicas ni mensajería autónoma con adultos
 
 ## Documentación
 
+- [Instalación y validación de Fase 1](docs/FASE1_INSTALACION.md)
 - [Alcance y criterios MVP](docs/PRODUCTO_MVP.md)
 - [Arquitectura prevista](docs/ARQUITECTURA.md)
 - [Protocolo de protección de infancia (borrador)](docs/PROTECCION_INFANCIA.md)
@@ -68,7 +80,7 @@ Los menores **no tendrán cuentas públicas ni mensajería autónoma con adultos
 
 ## Próximos desarrollos
 
-La fase técnica posterior contempla aplicación full-stack con base de datos, autenticación, revisión docente, reservas, pagos, valoraciones comprobadas, consentimiento parental, mensajería moderada y canal de reportes. Ver [ARQUITECTURA](docs/ARQUITECTURA.md) y [ROADMAP](docs/ROADMAP.md).
+La Fase 1 ya contiene el diseño SQL y código de autenticación, perfiles y revisión; siguen pendientes su puesta en marcha en infraestructura exclusiva y las pruebas de seguridad de extremo a extremo. La siguiente fase incorpora reservas, pagos, valoraciones comprobadas, consentimiento parental verificable, mensajería moderada y canal de reportes. Ver [ARQUITECTURA](docs/ARQUITECTURA.md) y [ROADMAP](docs/ROADMAP.md).
 
 **Atención:** los borradores de políticas no equivalen a cumplimiento legal ni sustituyen evaluación profesional en protección de datos, derecho de infancia, contratación o normativa sectorial.
 

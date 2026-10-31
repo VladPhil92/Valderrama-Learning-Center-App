@@ -11,15 +11,15 @@ Los hitos son **secuenciales por evidencia**, no fechas comprometidas.
 - [x] Creación del repositorio remoto en GitHub y publicación del primer commit.
 - [ ] Revisión de marca, experiencia de usuario y alcance del negocio.
 
-## Fase 1 — Identidad y validación
+## Fase 1 — Identidad y validación (código preparado, despliegue operativo pendiente)
 
-- [ ] Autenticación segura de adultos, roles y permisos efectivos en backend.
-- [ ] Registro de tutores con foto, trayectoria y credenciales en almacenamiento privado.
-- [ ] Flujo humano de revisión, consulta legal cuando proceda, estados y apelación.
-- [ ] Consentimiento parental verificable y ficheros privados de menores.
-- [ ] Auditoría, pruebas de seguridad por rol y protección de datos.
+- [x] Código de autenticación Supabase Auth para adultos y reglas de roles/privilegios RLS preparadas (activación pendiente).
+- [x] Formularios de docentes, foto y acreditaciones privadas implementados (buckets SQL pendientes de activar).
+- [x] Cola de revisión y Edge Function de decisiones con evidencias y auditoría; falta SOP, apelación y despliegue.
+- [x] Fichas privadas seudónimas y declaraciones de representación con estado pendiente; **falta verificación documental real**.
+- [ ] RLS y auditoría diseñadas; pendientes pruebas reales entre cuentas, pentest y validación jurídica.
 
-**Criterio de salida:** ningún tutor aparece como habilitado para menores sin completar controles aplicables; ningún usuario accede a fichas de estudiantes ajenos.
+**Criterio de salida aún no alcanzado:** ningún tutor aparece como habilitado para menores sin completar controles aplicables; ningún usuario accede a fichas de estudiantes ajenos.
 
 ## Fase 2 — Marketplace y reservas
 

@@ -1,8 +1,8 @@
 # Arquitectura objetivo — diseño preliminar
 
-## Estado actual
+## Estado actual (Fase 1)
 
-SPA estática sin dependencias (HTML, CSS, JavaScript). La persistencia, identidad, verificaciones y contratación **no están implementadas**. Los diálogos de solicitud solo demuestran experiencia de usuario; no son controles de acceso ni de cumplimiento.
+La portada sigue siendo estática. Ahora existe un portal en `/portal/` para autenticación de adultos, familias y docentes, un esquema PostgreSQL RLS en `supabase/migrations/`, almacenamiento privado y una Edge Function en `supabase/functions/` para revisiones. **No se ha conectado ni desplegado una instancia Supabase exclusiva**, por lo que no hay persistencia ni verificación real operativa. Las reservas de la portada siguen siendo ilustrativas.
 
 ## Arquitectura propuesta para producción
 
