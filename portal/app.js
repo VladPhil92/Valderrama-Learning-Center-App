@@ -98,9 +98,11 @@ async function loadAccount() {
   const memberships = await api.rows('staff_members',{user_id:'eq.'+api.userId});
   staff = memberships[0] ?? null;
   show('staff-area',!!staff && ['reviewer','admin'].includes(staff.staff_role));
+  show('guardian-review-area',!!staff && ['safeguarding','admin'].includes(staff.staff_role));
   if (mine.account_type === 'guardian') await loadLearners();
   if (mine.account_type === 'tutor') await loadTutor();
   if (staff && ['reviewer','admin'].includes(staff.staff_role)) await loadReviewQueue();
+  if (staff && ['safeguarding','admin'].includes(staff.staff_role)) await loadGuardianReviewQueue();
 }
 
 $('onboarding-form').addEventListener('submit', async event => {
@@ -333,4 +335,41 @@ async function inspectTutor(tutorId,card){
     panel.append(text('p','Las aprobaciones para menores requieren controles adicionales; la aprobación solo para adultos no los autoriza.','hint'));
     card.append(panel);
   }catch(e){onError(e);}
+}
+
+async function loadGuardianReviewQueue() {
+  const [learners,reviews]=await Promise.all([
+    api.rows('learners',{order:'created_at.desc',limit:'30'}),
+    api.rows('guardian_reviews')
+  ]);
+  const status=new Map(reviews.map(x=>[x.learner_id,x.status]));
+  const list=$('guardian-review-list');
+  list.replaceChildren();
+  const pending=learners.filter(x=>status.get(x.id)==='pending');
+  if(!pending.length) list.append(text('p','No hay representaciones pendientes en esta muestra.','hint'));
+  for(const learner of pending){
+    const card=text('div','', 'review-card');
+    card.append(text('h4','Ficha privada: '+learner.nickname));
+    card.append(text('p','Etapa y grado: '+learner.educational_stage+' · '+learner.grade_label));
+    const approve=text('button','Registrar verificación de representación');
+    approve.addEventListener('click',async()=>{
+      const evidence_ticket=window.prompt('Ticket de expediente de representación validado de forma independiente (ej. GUARD-1234). No escriba nombres ni números de identidad.');
+      if(!evidence_ticket) return;
+      try {
+        await api.reviewApplication('review_guardian',{learner_id:learner.id,status:'verified',evidence_ticket:evidence_ticket.trim().toUpperCase()});
+        flash('Representación marcada como verificada por el equipo autorizado.');await loadGuardianReviewQueue();
+      }catch(e){onError(e);}
+    });
+    const reject=text('button','Rechazar representación');
+    reject.addEventListener('click',async()=>{
+      const evidence_ticket=window.prompt('Ticket de decisión de rechazo (ej. GUARD-1234):');
+      if(!evidence_ticket) return;
+      try {
+        await api.reviewApplication('review_guardian',{learner_id:learner.id,status:'rejected',evidence_ticket:evidence_ticket.trim().toUpperCase()});
+        flash('Decisión de rechazo registrada.');await loadGuardianReviewQueue();
+      }catch(e){onError(e);}
+    });
+    const actions=text('div','', 'decision-actions');
+    actions.append(approve,reject);card.append(actions);list.append(card);
+  }
 }

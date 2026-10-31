@@ -107,11 +107,11 @@ Deno.serve(async(req)=>{
       return response(422,{error:'Docente o decisión inválidos'},origin);
     if(body.status==='approved_minors' && staff.staff_role!=='admin')
       return response(403,{error:'La aprobación para menores requiere un administrador'},origin);
-    const {data:profile}=await admin.from('tutor_profiles').select('user_id,submitted_at,headline,subjects').eq('user_id',body.tutor_id).maybeSingle();
+    const {data:profile}=await admin.from('tutor_profiles').select('user_id,submitted_at,headline,subjects,photo_path').eq('user_id',body.tutor_id).maybeSingle();
     if(!profile?.submitted_at) return response(409,{error:'El docente no ha enviado su solicitud'},origin);
     if(body.status?.startsWith('approved')) {
       const needed=body.status==='approved_minors'?checksRequiredForMinor:checksRequiredForAdult;
-      if(!profile.headline || !profile.subjects?.length || !(await checked(body.tutor_id!,needed)) || !(await verifiedCredential(body.tutor_id!)))
+      if(!profile.headline || !profile.photo_path || !profile.subjects?.length || !(await checked(body.tutor_id!,needed)) || !(await verifiedCredential(body.tutor_id!)))
         return response(409,{error:'Faltan verificaciones documentadas para aprobar este docente'},origin);
     }
     const {error}=await admin.from('tutor_verifications').update({
