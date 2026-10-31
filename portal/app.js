@@ -172,6 +172,7 @@ async function loadTutor() {
     field(form,'modes').value=modes.length===2?'both':modes[0];
   }
   show('tutor-files',!!tutor);
+  $('photo-status').textContent = tutor?.photo_path ? 'Fotografía privada guardada. Pendiente de revisión para su publicación.' : 'No hay fotografía cargada.';
   if (!tutor) return;
   credentials = await api.rows('tutor_credentials',{tutor_id:'eq.'+api.userId,order:'created_at.desc'});
   const reviews = await api.rows('credential_reviews');
@@ -186,6 +187,8 @@ async function loadTutor() {
     card.append(info,text('span',reviewById.get(item.id)??'pendiente'));
     list.append(card);
   }
+  const photoForm=$('photo-form');
+  for(const element of photoForm.elements) element.disabled=disabled;
   const fileForm=$('credential-form');
   for(const element of fileForm.elements) element.disabled=disabled;
   $('submit-tutor').disabled=disabled || !!tutor.submitted_at;
@@ -206,6 +209,22 @@ $('tutor-form').addEventListener('submit',async event=>{
     if(tutor) await api.patch('tutor_profiles','user_id',api.userId,values);
     else await api.insert('tutor_profiles',{user_id:api.userId,...values});
     flash('Borrador académico guardado de forma privada.');
+    await loadTutor();
+  }catch(e){onError(e);}
+});
+$('photo-form').addEventListener('submit',async event => {
+  event.preventDefault();
+  if(!tutor) return flash('Primero debe crear su borrador docente.',true);
+  const form=event.currentTarget;
+  const file=field(form,'photo').files?.[0];
+  const error=validateAttachment(file);
+  if(error || !['image/jpeg','image/png'].includes(file?.type)) return flash('La fotografía debe ser JPG o PNG de hasta 8 MB.',true);
+  try {
+    const path=makeObjectPath(api.userId,file,crypto.randomUUID());
+    await api.upload('tutor-photos',path,file);
+    await api.patch('tutor_profiles','user_id',api.userId,{photo_path:path});
+    form.reset();
+    flash('Foto guardada de forma privada. La imagen no se publicará antes de aprobar el perfil.');
     await loadTutor();
   }catch(e){onError(e);}
 });
@@ -267,12 +286,26 @@ async function inspectTutor(tutorId,card){
     for(const doc of docs) {
       const row=text('div','', 'item');
       row.append(text('span',doc.qualification+' — '+doc.issuing_institution));
-      const button=text('button','Marcar verificado');
+      const button=text('button','Registrar acreditación verificada');
       button.addEventListener('click',async()=>{
-        try{await api.reviewApplication('review_credential',{credential_id:doc.id,status:'verified'});flash('Documento marcado como verificado tras la revisión correspondiente.');await inspectTutor(tutorId,card);}
+        const evidence_ticket=window.prompt('Ticket de evidencia interna (por ejemplo CRED-1234). No incluya datos personales.');
+        if(!evidence_ticket) return;
+        try{await api.reviewApplication('review_credential',{credential_id:doc.id,status:'verified',evidence_ticket:evidence_ticket.trim().toUpperCase()});flash('Documento marcado como verificado con ticket de revisión.');await inspectTutor(tutorId,card);}
         catch(e){onError(e);}
       });
       row.append(button);panel.append(row);
+    }
+    for(const checkType of ['identity','academic',...(staff?.staff_role==='admin'?['legal_eligibility','safeguarding_training']:[])]) {
+      const button=text('button','Registrar control: '+checkType);
+      button.addEventListener('click',async()=>{
+        const evidence_ticket=window.prompt('Ticket del control '+checkType+' (por ejemplo CTRL-1234). Debe existir un procedimiento de verificación documentado.');
+        if(!evidence_ticket) return;
+        try {
+          await api.reviewApplication('review_check',{tutor_id:tutorId,check_type:checkType,result:'passed',evidence_ticket:evidence_ticket.trim().toUpperCase()});
+          flash('Control registrado con ticket de evidencia.'); await inspectTutor(tutorId,card);
+        }catch(e){onError(e);}
+      });
+      panel.append(button);
     }
     const approveAdults=text('button','Aprobar solo adultos');
     approveAdults.addEventListener('click',async()=>{
@@ -285,7 +318,17 @@ async function inspectTutor(tutorId,card){
       catch(e){onError(e);}
     });
     const buttons=text('div','', 'decision-actions');
-    buttons.append(approveAdults,reject);
+    buttons.append(approveAdults);
+    if(staff?.staff_role==='admin') {
+      const approveMinors=text('button','Aprobar para menores (solo con 4 controles)');
+      approveMinors.addEventListener('click',async()=>{
+        if(!window.confirm('Confirme que completó de forma documentada todas las verificaciones legales, académicas y de protección aplicables.')) return;
+        try { await api.reviewApplication('review_tutor',{tutor_id:tutorId,status:'approved_minors'});flash('Aprobación para menores registrada.');await loadReviewQueue();}
+        catch(e){onError(e);}
+      });
+      buttons.append(approveMinors);
+    }
+    buttons.append(reject);
     panel.append(buttons);
     panel.append(text('p','Las aprobaciones para menores requieren controles adicionales; la aprobación solo para adultos no los autoriza.','hint'));
     card.append(panel);
