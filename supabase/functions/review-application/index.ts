@@ -45,7 +45,7 @@ async function verifiedCredential(tutor_id:string) {
 }
 Deno.serve(async(req)=>{
  const origin=req.headers.get('origin') ?? '';
- if(req.method==='OPTIONS') return response(origin===ALLOWED_ORIGIN?204:403,{},origin);
+ if(req.method==='OPTIONS') return response(origin===ALLOWED_ORIGIN?200:403,{},origin);
  if(req.method!=='POST') return response(405,{error:'Método no permitido'},origin);
  if(!ALLOWED_ORIGIN || (origin && origin!==ALLOWED_ORIGIN)) return response(403,{error:'Origen no autorizado'},origin);
  try {
