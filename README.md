@@ -4,7 +4,7 @@
 
 Valderrama Learning Center es un proyecto de plataforma digital para conectar **familias, estudiantes universitarios y personas adultas** con **tutores y profesores especializados**. Atiende todas las edades y asignaturas, con controles reforzados cuando participan menores de 18 años.
 
-**Estado (30 de octubre de 2026):** `v0.2.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
+**Estado (3 de noviembre de 2026):** `v0.2.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
 
 ## Qué contiene
 
@@ -87,3 +87,14 @@ La Fase 1 ya contiene el diseño SQL y código de autenticación, perfiles y rev
 ## Autoría y licencia
 
 © 2026 Valderrama Learning Center. Reservados todos los derechos. Repositorio pensado para trabajo **privado** hasta definir licenciamiento, marca y revisión de seguridad.
+
+
+## Simulador funcional preoperativo (noviembre 2026)
+
+`/demo/index.html` permite recorrer **en memoria** los flujos de selección de docente ficticio, solicitud de horario, aceptación o rechazo, reprogramación, finalización de una clase simulada, reseña pendiente de moderación y alerta que congela operaciones. Se ejecuta con `npm run dev` y se publica con `npm run build` sin proveedores externos ni almacenamiento de información. No introduce ni verifica identidades reales. El motor puro en `src/marketplace.js` está cubierto por pruebas en `tests/marketplace.test.js`.
+
+**IMPORTANTE:** No confundir un flujo de interfaz completado con reservas operativas. La comprobación de disponibilidad, autenticación, pagos, datos privados, acreditación de docentes, representación legal, moderación y garantías de protección de infancia deben estar a cargo de un backend confiable, políticas RLS, procedimientos humanos y pruebas de seguridad antes de abrir el servicio. Los estados `approved_*` del simulador son exclusivamente ficticios.
+
+### Preparación de dominio y CTG One
+
+El dominio previsto por el propietario es `valderramalearnigncenter.ctgone.com` (ortografía exacta solicitada). La experiencia estática del repositorio puede integrarse mediante una copia inmutable de `dist/` al namespace `/valderrama-learning-center/` de CTG One y un enrutamiento por Host. La sincronización es **de código**, no de credenciales, cuentas, usuarios ni pagos. Se debe configurar DNS/TLS y reactivar la infraestructura antes de ofrecer el subdominio en Internet. Véase `docs/INTEGRACION_CTG_ONE.md`.

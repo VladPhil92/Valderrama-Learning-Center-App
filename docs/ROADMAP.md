@@ -23,6 +23,8 @@ Los hitos son **secuenciales por evidencia**, no fechas comprometidas.
 
 ## Fase 2 — Marketplace y reservas
 
+**Avance en código (3/11/2026):** simulador sin persistencia para selección, agenda ficticia, solicitudes, respuesta docente, reprogramación, clase completada y suspensiones por alerta. El motor de dominio y pruebas están implementados, **no las operaciones productivas**.
+
 - [ ] Catálogo con filtros curriculares por grado/asignatura, modalidad y ciudad.
 - [ ] Agenda, solicitudes, aceptación, reprogramación y notificaciones.
 - [ ] Términos comerciales y pagos a través de tercero verificado.
