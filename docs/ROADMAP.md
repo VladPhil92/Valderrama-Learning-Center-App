@@ -1,5 +1,7 @@
 # Hoja de ruta del producto
 
+**Requisito transversal:** web + app Android + app iOS constituyen un único producto sincronizado mediante la misma API, permisos y datos. La app móvil NO pertenece a una fase opcional de escalamiento. Referencia: [APP_MOVIL_SINCRONIZACION.md](APP_MOVIL_SINCRONIZACION.md).
+
 Los hitos son **secuenciales por evidencia**, no fechas comprometidas.
 
 ## Fase 0 — Conceptualización y repositorio (incluida en el paquete)
@@ -20,6 +22,17 @@ Los hitos son **secuenciales por evidencia**, no fechas comprometidas.
 - [ ] RLS y auditoría diseñadas; pendientes pruebas reales entre cuentas, pentest y validación jurídica.
 
 **Criterio de salida aún no alcanzado:** ningún tutor aparece como habilitado para menores sin completar controles aplicables; ningún usuario accede a fichas de estudiantes ajenos.
+
+## Fase 1M — Clientes Android + iOS (prioridad paralela a backend)
+
+- [x] Estructura inicial React Native/Expo en `mobile/` para ambas plataformas, sin servicios contratados.
+- [x] Catálogo demostrativo offline, lectura opcional de API pública y separación explícita de estados reales/ficticios.
+- [ ] Instalación de dependencias, chequeo TypeScript y ejecución de la app en Android físico/emulador e iOS físico/simulador.
+- [ ] Inicio de sesión y sesión revocable compartida con la web desde backend seguro.
+- [ ] Reservas y agenda compartidas, progresos académicos y notificaciones seguras.
+- [ ] Pruebas E2E y de autorización entre web, Android e iOS con dos dispositivos.
+
+**Criterio de salida:** mismo usuario, misma reserva y mismos datos sincronizados tras cambios desde cualquiera de los tres clientes; pruebas de revocación y conflictos. Sin backend persistente real, NO cumplido.
 
 ## Fase 2 — Marketplace y reservas
 
@@ -45,6 +58,6 @@ Los hitos son **secuenciales por evidencia**, no fechas comprometidas.
 ## Fase 4 — Escalamiento
 
 - [ ] Accesibilidad, múltiples ciudades, idiomas y medios de pago.
-- [ ] App móvil / PWA con controles parentales y notificaciones.
+- [ ] Distribución pública de builds Android/iOS, accesibilidad y políticas de tiendas, tras pruebas de seguridad.
 - [ ] Alianzas institucionales y oferta de formación corporativa.
 - [ ] Auditorías de privacidad, seguridad y calidad continuas.

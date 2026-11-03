@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Valderrama Learning Center",
+    "slug": "valderrama-learning-center",
+    "scheme": "valderramalearningcenter",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ctgone.valderramalearningcenter"
+    },
+    "android": {
+      "package": "com.ctgone.valderramalearningcenter"
+    },
+    "extra": {
+      "product": "education-marketplace",
+      "deploymentStatus": "prelaunch"
+    }
+  }
+}

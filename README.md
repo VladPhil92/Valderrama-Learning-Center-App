@@ -2,11 +2,15 @@
 
 > **Aprendizaje humano. Conexiones responsables.**
 
+**Alcance obligatorio:** un solo producto en web, Android e iOS, con backend, identidad, reservas y datos compartidos. La app **React Native / Expo** está iniciada en [`mobile/`](mobile/) y su arquitectura se explica en [`docs/APP_MOVIL_SINCRONIZACION.md`](docs/APP_MOVIL_SINCRONIZACION.md). **No hay sincronización de producción todavía**: es una base de código para Android e iOS con navegación y catálogo demostrativos, no una app disponible en tiendas.
+
 Valderrama Learning Center es un proyecto de plataforma digital para conectar **familias, estudiantes universitarios y personas adultas** con **tutores y profesores especializados**. Atiende todas las edades y asignaturas, con controles reforzados cuando participan menores de 18 años.
 
 **Estado (3 de noviembre de 2026):** `v0.3.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
 
 ## Qué contiene
+
+- Proyecto React Native/Expo en `mobile/` con interfaces preliminares Android/iOS, catálogo remoto configurable y estado de demostración aislado.
 
 - Página inicial responsive y catálogo de tutores de demostración.
 - Búsqueda por nombre, especialidad y tema, filtrado por nivel y modalidad.
@@ -76,6 +80,7 @@ Los menores **no tendrán cuentas públicas ni mensajería autónoma con adultos
 - [Tratamiento de datos y privacidad (borrador)](docs/PRIVACIDAD_BORRADOR.md)
 - [Referencias normativas colombianas](docs/MARCO_LEGAL_COLOMBIA.md)
 - [Fases e hitos](docs/ROADMAP.md)
+- [App Android/iOS y sincronización real](docs/APP_MOVIL_SINCRONIZACION.md)
 - [Seguridad y reporte responsable](SECURITY.md)
 
 ## Próximos desarrollos
