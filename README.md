@@ -2,11 +2,15 @@
 
 > **Aprendizaje humano. Conexiones responsables.**
 
+**Alcance obligatorio:** un solo producto en web, Android e iOS, con backend, identidad, reservas y datos compartidos. La app **React Native / Expo** está iniciada en [`mobile/`](mobile/) y su arquitectura se explica en [`docs/APP_MOVIL_SINCRONIZACION.md`](docs/APP_MOVIL_SINCRONIZACION.md). **Ya existe un laboratorio de sincronización persistente local, pero no hay sincronización de producción todavía**: es una base de código para Android e iOS con navegación y catálogo demostrativos, no una app disponible en tiendas.
+
 Valderrama Learning Center es un proyecto de plataforma digital para conectar **familias, estudiantes universitarios y personas adultas** con **tutores y profesores especializados**. Atiende todas las edades y asignaturas, con controles reforzados cuando participan menores de 18 años.
 
-**Estado (30 de octubre de 2026):** `v0.2.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
+**Estado (3 de noviembre de 2026):** `v0.5.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
 
 ## Qué contiene
+
+- Proyecto React Native/Expo en `mobile/` con interfaces preliminares Android/iOS, catálogo remoto configurable y estado de demostración aislado.
 
 - Página inicial responsive y catálogo de tutores de demostración.
 - Búsqueda por nombre, especialidad y tema, filtrado por nivel y modalidad.
@@ -29,7 +33,7 @@ La nueva ruta [`portal/index.html`](portal/index.html) incorpora:
 
 ## Ejecutar el prototipo
 
-Requiere Node.js 20 o superior. **No necesita instalar dependencias externas.**
+Requiere Node.js 22.13 o superior. **No necesita instalar dependencias externas.**
 
 ```bash
 npm run dev
@@ -44,6 +48,29 @@ npm run check   # Pruebas + compilación
 ```
 
 El catálogo inicial sigue siendo estático y ficticio. La sección `/portal/` usa el backend Supabase solo después de configurar las variables publicables, aplicar migraciones y desplegar la Edge Function. No contiene secretos ni usuarios precargados.
+
+## Fase de sincronización local (v0.4.0)
+
+El servidor `server/serve.mjs` utiliza SQLite local con revisiones transaccionales, deduplicación e interfaz web `/sync/`. Se conecta a `mobile/` mediante los endpoints de `/v1/demo/`, con actualización periódica de reservas **ficticias**. Para probarlo:
+
+```bash
+npm run dev:sync
+# Abrir http://127.0.0.1:4180/sync/
+npm run check
+```
+
+No se emplean proveedores de pago. **Es una API local sin autenticación real, incapaz de procesar operaciones productivas o menores. No desplegar públicamente**. Instrucciones y contrato: [FASE3_SINCRONIZACION_LOCAL.md](docs/FASE3_SINCRONIZACION_LOCAL.md).
+
+## Fase de cuentas privadas de prueba (v0.5.0)
+
+Ahora existe un segundo laboratorio en **`/sync/secure/`** con cuentas ficticias, sesiones revocables y reservas separadas por cuenta. Tanto la web de desarrollo como la pestaña **Cuentas** de Android/iOS usan `/v1/lab/*` contra el mismo servidor Node/SQLite. **No verifica identidades reales, edad, títulos ni representación legal y nunca permite operaciones con menores.**
+
+```bash
+npm run dev:sync
+# Abrir http://127.0.0.1:4180/sync/secure/
+```
+
+Consultar la guía de seguridad, endpoints y limitaciones: [FASE4_CUENTAS_LOCALES.md](docs/FASE4_CUENTAS_LOCALES.md).
 
 ## Principios del producto
 
@@ -76,6 +103,9 @@ Los menores **no tendrán cuentas públicas ni mensajería autónoma con adultos
 - [Tratamiento de datos y privacidad (borrador)](docs/PRIVACIDAD_BORRADOR.md)
 - [Referencias normativas colombianas](docs/MARCO_LEGAL_COLOMBIA.md)
 - [Fases e hitos](docs/ROADMAP.md)
+- [App Android/iOS y sincronización real](docs/APP_MOVIL_SINCRONIZACION.md)
+- [Laboratorio de API local persistente](docs/FASE3_SINCRONIZACION_LOCAL.md)
+- [Cuentas ficticias y agenda privada compartida](docs/FASE4_CUENTAS_LOCALES.md)
 - [Seguridad y reporte responsable](SECURITY.md)
 
 ## Próximos desarrollos
@@ -87,3 +117,14 @@ La Fase 1 ya contiene el diseño SQL y código de autenticación, perfiles y rev
 ## Autoría y licencia
 
 © 2026 Valderrama Learning Center. Reservados todos los derechos. Repositorio pensado para trabajo **privado** hasta definir licenciamiento, marca y revisión de seguridad.
+
+
+## Simulador funcional preoperativo (noviembre 2026)
+
+`/demo/index.html` permite recorrer **en memoria** los flujos de selección de docente ficticio, solicitud de horario, aceptación o rechazo, reprogramación, finalización de una clase simulada, reseña pendiente de moderación y alerta que congela operaciones. Se ejecuta con `npm run dev` y se publica con `npm run build` sin proveedores externos ni almacenamiento de información. No introduce ni verifica identidades reales. El motor puro en `src/marketplace.js` está cubierto por pruebas en `tests/marketplace.test.js`.
+
+**IMPORTANTE:** No confundir un flujo de interfaz completado con reservas operativas. La comprobación de disponibilidad, autenticación, pagos, datos privados, acreditación de docentes, representación legal, moderación y garantías de protección de infancia deben estar a cargo de un backend confiable, políticas RLS, procedimientos humanos y pruebas de seguridad antes de abrir el servicio. Los estados `approved_*` del simulador son exclusivamente ficticios.
+
+### Preparación de dominio y CTG One
+
+El dominio previsto por el propietario es `valderramalearnigncenter.ctgone.com` (ortografía exacta solicitada). La experiencia estática del repositorio puede integrarse mediante una copia inmutable de `dist/` al namespace `/valderrama-learning-center/` de CTG One y un enrutamiento por Host. La sincronización es **de código**, no de credenciales, cuentas, usuarios ni pagos. Se debe configurar DNS/TLS y reactivar la infraestructura antes de ofrecer el subdominio en Internet. Véase `docs/INTEGRACION_CTG_ONE.md`.

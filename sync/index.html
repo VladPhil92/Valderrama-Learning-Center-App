@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Laboratorio de sincronización | Valderrama Learning Center</title>
+<link rel="stylesheet" href="/sync/styles.css">
+<script type="module" src="/sync/app.js"></script>
+</head><body>
+<div class="banner">LABORATORIO LOCAL · DOCENTES FICTICIOS · SIN IDENTIDAD, PAGOS NI CLASES REALES</div>
+<header><div class="wrap"><p class="eyebrow">CTG ONE · EDUCACIÓN</p><h1>Valderrama Learning Center</h1><p>Laboratorio de sincronización web ↔ Android ↔ iOS</p></div></header>
+<main class="wrap">
+<section class="intro"><div><h2>Una sola fuente de información</h2><p>Esta página y la aplicación móvil consultan el mismo servicio local. Las solicitudes sobreviven al cierre del navegador y se actualizan cada 4 segundos mientras el servidor esté disponible.</p></div><div class="pill"><span id="connection">Conectando…</span><small id="revision">Revisión —</small></div></section>
+<div class="metrics"><article><strong id="pending">0</strong><span>Pendientes</span></article><article><strong id="confirmed">0</strong><span>Confirmadas</span></article><article><strong id="completed">0</strong><span>Finalizadas</span></article><article><strong id="incidents">0</strong><span>Alertas</span></article></div>
+<div class="columns"><section class="panel"><p class="eyebrow">01 · CREAR UNA RESERVA FICTICIA</p><h2>Solicitud de tutoría</h2>
+<form id="new-booking">
+<label>Docente de ejemplo<select id="tutor" required></select></label>
+<label>Materia genérica<input id="subject" required minlength="2" maxlength="100" value="Matemáticas"></label>
+<label>Modalidad<select id="mode"><option value="virtual">Virtual</option><option value="presencial">Presencial</option></select></label>
+<label>Fecha y hora futura<input type="datetime-local" id="start" required></label>
+<button type="submit" class="primary">Guardar solicitud ficticia</button>
+</form><p class="small">El servidor restringe esta demostración a estudiantes adultos ficticios. No ingrese datos personales ni información sobre menores.</p>
+</section><section class="panel"><p class="eyebrow">02 · ESTADO COMPARTIDO</p><h2>Operaciones sincronizadas</h2>
+<div id="bookings" aria-live="polite"></div><button type="button" id="reset" class="quiet">Reiniciar base ficticia</button></section></div>
+<p id="feedback" role="status" aria-live="polite"></p>
+<footer>Prueba local de arquitectura. La autenticación, la verificación docente, la tutoría con menores y los pagos siguen deshabilitados.</footer>
+</main>
+</body></html>

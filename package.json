@@ -1,17 +1,18 @@
 {
   "name": "valderrama-learning-center-app",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
-  "description": "Prototipo navegable de una plataforma de conexión educativa segura",
+  "description": "Plataforma educativa con laboratorio local persistente y clientes web/Android/iOS",
   "scripts": {
     "dev": "node tools/serve.mjs",
+    "dev:sync": "node server/serve.mjs",
     "build": "node tools/build.mjs",
     "test": "node --test",
-    "check": "node --check portal/app.js && node --check portal/client.js && node --check portal/validators.js && npm run test && npm run build"
+    "check": "node --check server/store.mjs && node --check server/lab-store.mjs && node --check server/lab-api.mjs && node --check sync/secure/app.js && node --check server/api.mjs && node --check server/serve.mjs && node --check sync/app.js && node --check portal/app.js && node --check portal/client.js && node --check portal/validators.js && npm run test && npm run build"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13.0"
   },
   "license": "UNLICENSED"
 }

@@ -4,14 +4,22 @@
 
 La portada sigue siendo estática. Ahora existe un portal en `/portal/` para autenticación de adultos, familias y docentes, un esquema PostgreSQL RLS en `supabase/migrations/`, almacenamiento privado y una Edge Function en `supabase/functions/` para revisiones. **No se ha conectado ni desplegado una instancia Supabase exclusiva**, por lo que no hay persistencia ni verificación real operativa. Las reservas de la portada siguen siendo ilustrativas.
 
+## Laboratorio técnico implementado
+
+El subproyecto `server/` aporta una API Node.js/SQLite con datos **únicamente ficticios**, transacciones y revisión compartida. El subproyecto `sync/` es un cliente web real de esa API. `mobile/` consume el mismo contrato de catálogo y reservas ficticias. La API local no tiene autenticación; **no es la arquitectura de seguridad de producción**. Ver [FASE3_SINCRONIZACION_LOCAL.md](FASE3_SINCRONIZACION_LOCAL.md).
+
 ## Arquitectura propuesta para producción
 
+**Decisión 03/11/2026:** el producto se distribuye en **web CTG One, Android e iOS** desde su MVP. Ninguna reserva, ficha de estudiante o pago residirá como fuente de verdad en el cliente. React Native/Expo en `mobile/` es un cliente nativo independiente que consulta la misma API que la web. Es un prototipo sin integración operativa hoy; ver [APP_MOVIL_SINCRONIZACION.md](APP_MOVIL_SINCRONIZACION.md).
+
 ```
-Navegador / aplicación móvil
-       |
-Frontend web (Next.js + TypeScript)
-       |
-Servidor de aplicación / BFF con permisos verificados
+Navegador (CTG One)      App Android      App iOS
+      |                      |              |
+Frontend web (Next.js)      React Native / Expo
+      |                      |              |
+      +----------------------+--------------+
+                             |
+Servicio API versionado /v1 con permisos verificados
        |---------------------------------------------|
 PostgreSQL con RLS     Servicio de pagos       Servicio de notificaciones
        |                     |                       |
