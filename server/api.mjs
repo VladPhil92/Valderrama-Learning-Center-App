@@ -1,3 +1,5 @@
+import { handleLabApi } from './lab-api.mjs';
+import { LabError } from './lab-store.mjs';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -14,6 +16,10 @@ const assets = new Map([
   ['/sync/index.html', ['sync/index.html','text/html; charset=utf-8']],
   ['/sync/app.js', ['sync/app.js','text/javascript; charset=utf-8']],
   ['/sync/styles.css', ['sync/styles.css','text/css; charset=utf-8']],
+  ['/sync/secure/', ['sync/secure/index.html','text/html; charset=utf-8']],
+  ['/sync/secure/index.html', ['sync/secure/index.html','text/html; charset=utf-8']],
+  ['/sync/secure/app.js', ['sync/secure/app.js','text/javascript; charset=utf-8']],
+  ['/sync/secure/styles.css', ['sync/secure/styles.css','text/css; charset=utf-8']],
 ]);
 
 function json(res, status, value, extra = {}) {
@@ -74,6 +80,10 @@ export function createDemoApiServer(store) {
           'X-Content-Type-Options':'nosniff',
           'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'",
         }).end(content);
+        return;
+      }
+      if (path.startsWith('/v1/lab/')) {
+        await handleLabApi(req,res,{url,readBody:inputJson,lab:store.lab});
         return;
       }
       if (method === 'GET' && path === '/v1/health') {
@@ -144,6 +154,7 @@ export function createDemoApiServer(store) {
       const response=store.mutate({...meta,operation,transition});
       json(res,200,response,{'ETag':String(response.revision)});
     } catch (error) {
+      if (error instanceof LabError) { json(res,error.status,{error:error.message,demo:true});return; }
       if (error instanceof ConflictError) {json(res,409,{error:error.message,code:'REVISION_CONFLICT'});return;}
       if (error instanceof PreconditionError) {json(res,428,{error:error.message,code:'PRECONDITION_REQUIRED'});return;}
       if (error instanceof HttpError) {json(res,error.status,{error:error.message});return;}

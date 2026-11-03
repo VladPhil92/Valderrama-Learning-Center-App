@@ -88,3 +88,8 @@ export async function sendDemoCommand(
     throw new Error('La operación no fue confirmada por el sandbox');
   }
 }
+
+/** URL de la API educativa; mismo origen del catálogo, sin exponer secretos. */
+export function labEndpoint(path:string):string {
+  return endpoint(path);
+}

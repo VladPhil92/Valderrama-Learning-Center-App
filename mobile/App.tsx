@@ -8,12 +8,13 @@ import {
   type DemoSnapshot,
 } from './src/api';
 import { DEMO_CATALOG } from './src/demo-catalog';
+import LabAccounts from './src/LabAccounts';
 import type { CatalogSnapshot, PublicTutor } from './src/catalog';
 
-type Tab = 'catalogo' | 'agenda' | 'progreso';
+type Tab = 'catalogo' | 'agenda' | 'progreso' | 'cuentas';
 const NAV: { id: Tab; label: string }[] = [
   { id: 'catalogo', label: 'Explorar' }, { id: 'agenda', label: 'Mis clases' },
-  { id: 'progreso', label: 'Progreso' },
+  { id: 'progreso', label: 'Progreso' }, { id: 'cuentas', label: 'Cuentas' },
 ];
 
 export default function App() {
@@ -111,7 +112,7 @@ export default function App() {
         ))}
       </View>
       <ScrollView style={styles.body} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollBody}>
-        {tab === 'catalogo' ? (
+        {tab === 'cuentas' ? <LabAccounts /> : tab === 'catalogo' ? (
           <>
             <Text style={styles.heading}>Encuentra a tu profesor</Text>
             <Text style={styles.secondary}>Colegio, universidad y aprendizaje a lo largo de la vida.</Text>
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 16, paddingTop: 10, paddingBottom: 8, gap: 8 },
   navItem: { flex: 1, alignItems: 'center', paddingVertical: 11, borderRadius: 9, backgroundColor: '#f0f4f8' },
   navItemActive: { backgroundColor: '#102f48' },
-  navText: { color: '#596b78', fontSize: 12, fontWeight: '700' },
+  navText: { color: '#596b78', fontSize: 11, fontWeight: '700' },
   navTextActive: { color: '#fff' },
   body: { flex: 1 },
   scrollBody: { padding: 20, paddingBottom: 60 },

@@ -1,3 +1,4 @@
+import { createLabStore } from './lab-store.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { createHash } from 'node:crypto';
 import { createEmptyMarketplace } from '../src/marketplace.js';
@@ -106,5 +107,6 @@ export function openDemoStore(filename = ':memory:') {
     }
   }
 
-  return { snapshot, publicCatalog, mutate, close: () => db.close() };
+  const lab=createLabStore(db);
+  return { snapshot, publicCatalog, mutate, lab, close: () => db.close() };
 }

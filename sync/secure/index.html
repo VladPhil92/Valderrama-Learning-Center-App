@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Cuentas de prueba | Valderrama Learning Center</title>
+<link rel="stylesheet" href="/sync/secure/styles.css">
+<script type="module" src="/sync/secure/app.js"></script>
+</head><body>
+<div class="alert">LABORATORIO LOCAL · SIN IDENTIDADES REALES · PROHIBIDO INTRODUCIR INFORMACIÓN DE MENORES</div>
+<header><p>CTG ONE · EDUCACIÓN</p><h1>Valderrama Learning Center</h1><span>Fase de autorización y reservas privadas</span></header>
+<main>
+<section class="intro">
+  <h2>Una cuenta. Una agenda privada.</h2>
+  <p>Registre un <strong>alias ficticio</strong> y use una contraseña exclusiva de pruebas. Una cuenta de docente podrá aceptar sus propias solicitudes; otra persona adulta no podrá leerlas. El registro no valida títulos, mayoría de edad ni representación legal.</p>
+  <div id="message" role="status" aria-live="polite"></div>
+</section>
+<div class="two" id="auth">
+<section class="panel"><p class="label">01 · ALTA DE PRUEBA</p><h2>Crear alias ficticio</h2>
+<form id="registration">
+<label>Alias (4–32 caracteres, sin datos reales)<input id="new-username" pattern="[A-Za-z0-9_-]{4,32}" maxlength="32" required autocomplete="off" placeholder="adulto_demo_01"></label>
+<label>Contraseña exclusiva de laboratorio<input id="new-password" type="password" minlength="12" maxlength="128" required autocomplete="new-password"></label>
+<label>Perfil de prueba<select id="new-role"><option value="adult">Estudiante adulto</option><option value="guardian">Responsable familiar (pendiente de verificación)</option><option value="tutor">Profesor (sin verificar)</option></select></label>
+<label id="subject-field" hidden>Especialidad ficticia<select id="new-subject"><option value="matematicas">Matemáticas</option><option value="ingles">Inglés</option><option value="ciencias">Ciencias</option><option value="programacion">Programación</option><option value="humanidades">Humanidades</option></select></label>
+<label class="check"><input type="checkbox" id="new-confirm" required> Confirmo que utilizaré únicamente información ficticia.</label>
+<button type="submit">Crear cuenta de prueba</button>
+</form></section>
+<section class="panel"><p class="label">02 · INICIAR SESIÓN</p><h2>Acceder a la cuenta</h2>
+<form id="login">
+<label>Alias ficticio<input id="username" autocomplete="username" required></label>
+<label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label>
+<button type="submit">Ingresar al laboratorio</button></form>
+<p class="muted">La sesión permanece únicamente en la memoria de esta pestaña. Al recargar será necesario volver a ingresar.</p>
+</section></div>
+<section class="panel" id="dashboard" hidden>
+<div class="dashboard-head"><div><p class="label">03 · PANEL PRIVADO</p><h2 id="identity">Cuenta de prueba</h2><p id="role" class="muted"></p></div>
+<div class="right"><span id="revision">Revisión 0</span><button type="button" class="outline" id="logout">Cerrar sesión</button><button type="button" class="outline" id="logout-all">Revocar todas las sesiones</button></div></div>
+<div class="two"><div><h3>Solicitar tutoría ficticia</h3><p class="muted">Disponible solo para cuentas adultas de prueba. No se admiten clases para menores.</p>
+<form id="booking">
+<label>Docente registrado en la demostración<select id="tutor" required></select></label>
+<label>Materia<input id="booking-subject" maxlength="100" minlength="2" value="Matemáticas" required></label>
+<label>Horario<input id="when" type="datetime-local" required></label>
+<button type="submit">Enviar solicitud adulta ficticia</button>
+</form></div><div><h3>Reservas de esta cuenta</h3><p class="muted">Los demás usuarios no pueden consultar este historial mediante la API privada.</p><div id="bookings"></div></div></div>
+</section>
+<footer>Las reservas y credenciales de prueba se almacenan solo en el equipo local. Sin pagos, verificación documental ni servicios externos. <a href="/sync/">Ver simulador anterior</a>.</footer>
+</main></body></html>
