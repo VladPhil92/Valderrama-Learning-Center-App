@@ -17,3 +17,15 @@ jobs:
           deno-version: v2.x
       - name: Tipado de Edge Function (no despliega)
         run: deno check --config supabase/functions/review-application/deno.json supabase/functions/review-application/index.ts
+
+  mobile-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias libres del cliente Expo
+        run: npm install --prefix mobile --no-audit --no-fund
+      - name: Validar TypeScript de Android e iOS (sin compilar binarios)
+        run: npm --prefix mobile run check

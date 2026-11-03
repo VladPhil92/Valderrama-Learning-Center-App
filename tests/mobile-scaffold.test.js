@@ -18,7 +18,7 @@ test('cliente móvil tiene un contrato para catálogo y nunca reserva sin servid
   const api = read('mobile/src/api.ts');
   const ui = read('mobile/App.tsx');
   assert.match(api, /v1\/tutors/);
-  assert.match(api, /HTTPS fuera del desarrollo local/);
+  assert.match(api, /HTTPS obligatorio fuera del entorno de desarrollo local/);
   assert.match(ui, /VERSIÓN PREOPERATIVA/);
   assert.match(ui, /las reservas están deshabilitadas/);
   assert.doesNotMatch(ui, /fetch\([^)]*bookings/);
