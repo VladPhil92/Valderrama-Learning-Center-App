@@ -41,6 +41,8 @@ Las tres interfaces usan **las mismas entidades y operaciones**. El backend, no 
 | `GET /v1/learning-plans` | Planes autorizados | Acceso privado por rol |
 | `GET /v1/sync?since=...` | Eventos incrementales | Solo eventos permitidos al usuario |
 
+Se ha implementado además un laboratorio de sesiones por cuenta y reservas privadas en `/v1/lab/*`, consumido por la web `/sync/secure/` y la pestaña móvil `Cuentas`; ver [FASE4_CUENTAS_LOCALES.md](FASE4_CUENTAS_LOCALES.md). **No se admiten alumnos menores ni datos reales.**
+
 Se ha implementado en laboratorio la lectura de catálogo `GET /v1/tutors` y las rutas **exclusivamente ficticias** `GET /v1/demo/snapshot`, `GET /v1/demo/sync?after=N`, `POST /v1/demo/bookings` y comandos de demostración; las demás rutas productivas siguen siendo especificación NO desplegada. Ver [FASE3_SINCRONIZACION_LOCAL.md](FASE3_SINCRONIZACION_LOCAL.md).
 
 ### Modelo mínimo de sincronización

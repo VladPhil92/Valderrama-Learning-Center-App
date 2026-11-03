@@ -6,7 +6,7 @@
 
 Valderrama Learning Center es un proyecto de plataforma digital para conectar **familias, estudiantes universitarios y personas adultas** con **tutores y profesores especializados**. Atiende todas las edades y asignaturas, con controles reforzados cuando participan menores de 18 años.
 
-**Estado (3 de noviembre de 2026):** `v0.4.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
+**Estado (3 de noviembre de 2026):** `v0.5.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
 
 ## Qué contiene
 
@@ -61,6 +61,17 @@ npm run check
 
 No se emplean proveedores de pago. **Es una API local sin autenticación real, incapaz de procesar operaciones productivas o menores. No desplegar públicamente**. Instrucciones y contrato: [FASE3_SINCRONIZACION_LOCAL.md](docs/FASE3_SINCRONIZACION_LOCAL.md).
 
+## Fase de cuentas privadas de prueba (v0.5.0)
+
+Ahora existe un segundo laboratorio en **`/sync/secure/`** con cuentas ficticias, sesiones revocables y reservas separadas por cuenta. Tanto la web de desarrollo como la pestaña **Cuentas** de Android/iOS usan `/v1/lab/*` contra el mismo servidor Node/SQLite. **No verifica identidades reales, edad, títulos ni representación legal y nunca permite operaciones con menores.**
+
+```bash
+npm run dev:sync
+# Abrir http://127.0.0.1:4180/sync/secure/
+```
+
+Consultar la guía de seguridad, endpoints y limitaciones: [FASE4_CUENTAS_LOCALES.md](docs/FASE4_CUENTAS_LOCALES.md).
+
 ## Principios del producto
 
 1. **Protección de menores desde la arquitectura:** tutela de un adulto responsable, perfiles de menores no públicos, contacto tutores–menores únicamente en canales controlados y mecanismos de denuncia.
@@ -94,6 +105,7 @@ Los menores **no tendrán cuentas públicas ni mensajería autónoma con adultos
 - [Fases e hitos](docs/ROADMAP.md)
 - [App Android/iOS y sincronización real](docs/APP_MOVIL_SINCRONIZACION.md)
 - [Laboratorio de API local persistente](docs/FASE3_SINCRONIZACION_LOCAL.md)
+- [Cuentas ficticias y agenda privada compartida](docs/FASE4_CUENTAS_LOCALES.md)
 - [Seguridad y reporte responsable](SECURITY.md)
 
 ## Próximos desarrollos

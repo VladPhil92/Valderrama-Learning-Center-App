@@ -54,7 +54,7 @@ Cada POST requiere `If-Match: <revision>`, `Idempotency-Key` y JSON. La base con
 
 ## Riesgos y trabajos siguientes
 
-1. **Identidad:** implementar sesiones de adultos revocables, autenticación real, políticas de permisos en servidor y separación de funciones. La API de demostración actual **no tiene autorización**; jamás exponerla públicamente.
+1. **Identidad:** implementar sesiones de adultos revocables, autenticación real, políticas de permisos en servidor y separación de funciones. La API histórica `/v1/demo/*` **no tiene autorización**; jamás exponerla públicamente. Se añadió un laboratorio separado `/v1/lab/*` con sesiones y permisos sintéticos, documentado en [FASE4_CUENTAS_LOCALES.md](FASE4_CUENTAS_LOCALES.md).
 2. **Base de producción:** modelo normalizado de reservas, fichas educativas y consentimientos en PostgreSQL con migraciones, RLS y pruebas de aislamiento.
 3. **Sincronización operativa:** cambios filtrados por usuario, revalidación de sesiones, reconexión, pruebas móviles nativas y eventos push con garantías definidas.
 4. **Infancia:** representación verificada, elegibilidad docente, expedientes privados, SOP de incidentes y revisión jurídica independiente.

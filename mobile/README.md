@@ -32,6 +32,14 @@ No hay API desplegada hoy. Si la URL no está configurada, aparecen perfiles **f
 
 Las variables `EXPO_PUBLIC_*` se incluyen en el cliente compilado: nunca colocar tokens privados o secretos. El endpoint público solo debe entregar perfiles autorizados/publicados y sin datos privados.
 
+## Cuentas de prueba privadas (nuevo)
+
+La pestaña **Cuentas** implementa registro con alias ficticios, inicio y cierre de sesión, revocación, lectura de reservas propias y decisiones por rol. Se comunica con los endpoints `/v1/lab/*` del mismo servidor que la web `/sync/secure/`.
+
+Se utiliza un token **exclusivamente en memoria**; al reiniciar la app hay que volver a ingresar. Esto evita guardar claves privadas en almacenamiento inseguro, pero no equivale a seguridad de producción. Sin menores, sin datos reales y sin pagos.
+
+Para probar se requiere que `npm run dev:sync` esté activo en el equipo anfitrión. Crear alias ficticios distintos para adulto y tutor y usar el mismo alias en dos clientes para comprobar sincronización. Ver [FASE4_CUENTAS_LOCALES.md](../docs/FASE4_CUENTAS_LOCALES.md).
+
 ## Próximas etapas obligatorias
 
 1. Backend propio y versionado: identidad de adultos, familias, docentes, disponibilidad, reservas, avances e incidencias.
