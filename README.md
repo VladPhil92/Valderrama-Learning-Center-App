@@ -2,11 +2,11 @@
 
 > **Aprendizaje humano. Conexiones responsables.**
 
-**Alcance obligatorio:** un solo producto en web, Android e iOS, con backend, identidad, reservas y datos compartidos. La app **React Native / Expo** está iniciada en [`mobile/`](mobile/) y su arquitectura se explica en [`docs/APP_MOVIL_SINCRONIZACION.md`](docs/APP_MOVIL_SINCRONIZACION.md). **No hay sincronización de producción todavía**: es una base de código para Android e iOS con navegación y catálogo demostrativos, no una app disponible en tiendas.
+**Alcance obligatorio:** un solo producto en web, Android e iOS, con backend, identidad, reservas y datos compartidos. La app **React Native / Expo** está iniciada en [`mobile/`](mobile/) y su arquitectura se explica en [`docs/APP_MOVIL_SINCRONIZACION.md`](docs/APP_MOVIL_SINCRONIZACION.md). **Ya existe un laboratorio de sincronización persistente local, pero no hay sincronización de producción todavía**: es una base de código para Android e iOS con navegación y catálogo demostrativos, no una app disponible en tiendas.
 
 Valderrama Learning Center es un proyecto de plataforma digital para conectar **familias, estudiantes universitarios y personas adultas** con **tutores y profesores especializados**. Atiende todas las edades y asignaturas, con controles reforzados cuando participan menores de 18 años.
 
-**Estado (3 de noviembre de 2026):** `v0.3.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
+**Estado (3 de noviembre de 2026):** `v0.4.0` — **portal de autenticación y perfiles desarrollado, pendiente de infraestructura y pruebas de integración**. La portada sigue siendo una demostración; el nuevo portal incorpora código de autenticación, registro y revisión, pero **no está conectado a un proyecto Supabase real**. No procesa reservas, pagos ni mensajería. **No desplegar como servicio operativo para menores de edad.** Los seis perfiles, nombres, puntuaciones y reseñas son ficticios.
 
 ## Qué contiene
 
@@ -33,7 +33,7 @@ La nueva ruta [`portal/index.html`](portal/index.html) incorpora:
 
 ## Ejecutar el prototipo
 
-Requiere Node.js 20 o superior. **No necesita instalar dependencias externas.**
+Requiere Node.js 22.13 o superior. **No necesita instalar dependencias externas.**
 
 ```bash
 npm run dev
@@ -48,6 +48,18 @@ npm run check   # Pruebas + compilación
 ```
 
 El catálogo inicial sigue siendo estático y ficticio. La sección `/portal/` usa el backend Supabase solo después de configurar las variables publicables, aplicar migraciones y desplegar la Edge Function. No contiene secretos ni usuarios precargados.
+
+## Fase de sincronización local (v0.4.0)
+
+El servidor `server/serve.mjs` utiliza SQLite local con revisiones transaccionales, deduplicación e interfaz web `/sync/`. Se conecta a `mobile/` mediante los endpoints de `/v1/demo/`, con actualización periódica de reservas **ficticias**. Para probarlo:
+
+```bash
+npm run dev:sync
+# Abrir http://127.0.0.1:4180/sync/
+npm run check
+```
+
+No se emplean proveedores de pago. **Es una API local sin autenticación real, incapaz de procesar operaciones productivas o menores. No desplegar públicamente**. Instrucciones y contrato: [FASE3_SINCRONIZACION_LOCAL.md](docs/FASE3_SINCRONIZACION_LOCAL.md).
 
 ## Principios del producto
 
@@ -81,6 +93,7 @@ Los menores **no tendrán cuentas públicas ni mensajería autónoma con adultos
 - [Referencias normativas colombianas](docs/MARCO_LEGAL_COLOMBIA.md)
 - [Fases e hitos](docs/ROADMAP.md)
 - [App Android/iOS y sincronización real](docs/APP_MOVIL_SINCRONIZACION.md)
+- [Laboratorio de API local persistente](docs/FASE3_SINCRONIZACION_LOCAL.md)
 - [Seguridad y reporte responsable](SECURITY.md)
 
 ## Próximos desarrollos

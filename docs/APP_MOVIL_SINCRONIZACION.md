@@ -41,7 +41,7 @@ Las tres interfaces usan **las mismas entidades y operaciones**. El backend, no 
 | `GET /v1/learning-plans` | Planes autorizados | Acceso privado por rol |
 | `GET /v1/sync?since=...` | Eventos incrementales | Solo eventos permitidos al usuario |
 
-El primer cliente móvil implementa **solo** el contrato de lectura de catálogo; las rutas restantes son especificación **no desplegada**.
+Se ha implementado en laboratorio la lectura de catálogo `GET /v1/tutors` y las rutas **exclusivamente ficticias** `GET /v1/demo/snapshot`, `GET /v1/demo/sync?after=N`, `POST /v1/demo/bookings` y comandos de demostración; las demás rutas productivas siguen siendo especificación NO desplegada. Ver [FASE3_SINCRONIZACION_LOCAL.md](FASE3_SINCRONIZACION_LOCAL.md).
 
 ### Modelo mínimo de sincronización
 
@@ -56,4 +56,4 @@ El primer cliente móvil implementa **solo** el contrato de lectura de catálogo
 
 La implementación inicial de React Native/Expo está en `mobile/`. Los paquetes open-source se pueden instalar localmente sin suscripción comercial. La construcción de binarios, dispositivos de prueba, certificación de publicación, DNS, SSL, backend alojado, mensajería y pagos son tareas distintas y requieren planificación específica. No incluir URL de pago, credenciales ni llaves comerciales en el código fuente.
 
-**No disponible actualmente:** servidor transaccional online, sincronización real entre dispositivos, builds nativos verificados o cuentas reales. El compromiso aquí es arquitectónico y de producto, no una declaración de producción.
+**Implementado localmente:** servidor SQLite transaccional de demostración, revisión monotónica, deduplicación, cliente web y cliente móvil para reservas ficticias. **No disponible actualmente:** servidor online transaccional con usuarios reales, sincronización operativa de cuentas entre dispositivos, builds nativos verificados o cuentas reales. El compromiso aquí es arquitectónico y de producto, no una declaración de producción.

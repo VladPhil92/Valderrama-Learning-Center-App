@@ -3,7 +3,10 @@ import {
   ActivityIndicator, Pressable, SafeAreaView, ScrollView, StatusBar,
   StyleSheet, Text, TextInput, View,
 } from 'react-native';
-import { getPublicTutorCatalog, isApiConfigured } from './src/api';
+import {
+  getPublicTutorCatalog, getDemoSnapshot, sendDemoCommand, isApiConfigured,
+  type DemoSnapshot,
+} from './src/api';
 import { DEMO_CATALOG } from './src/demo-catalog';
 import type { CatalogSnapshot, PublicTutor } from './src/catalog';
 
@@ -19,10 +22,13 @@ export default function App() {
   const [catalog, setCatalog] = useState<CatalogSnapshot>(DEMO_CATALOG);
   const [isLoading, setIsLoading] = useState(false);
   const [serviceMessage, setServiceMessage] = useState('');
+  const [demoSnapshot, setDemoSnapshot] = useState<DemoSnapshot | null>(null);
+  const [working, setWorking] = useState(false);
 
   const refresh = useCallback(async () => {
     if (!isApiConfigured()) {
       setCatalog(DEMO_CATALOG);
+      setDemoSnapshot(null);
       setServiceMessage('Sin API configurada: los perfiles son ficticios y las reservas están deshabilitadas.');
       return;
     }
@@ -30,10 +36,12 @@ export default function App() {
     try {
       const response = await getPublicTutorCatalog();
       setCatalog(response);
+      setDemoSnapshot(response.source === 'demo' ? await getDemoSnapshot() : null);
       setServiceMessage('');
     } catch {
       // No presentar resultados ficticios como datos vivos del servidor.
       setCatalog({ items: [], revision: 0, source: 'server' });
+      setDemoSnapshot(null);
       setServiceMessage('El servicio no responde. No se muestran docentes ni disponibilidad sin verificar.');
     } finally {
       setIsLoading(false);
@@ -41,6 +49,41 @@ export default function App() {
   }, []);
 
   useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    if (!isApiConfigured()) return;
+    const timer = setInterval(() => {
+      if (working) return;
+      void getDemoSnapshot().then((next) => {
+        setDemoSnapshot(previous => !previous || next.revision >= previous.revision ? next : previous);
+      }).catch(() => {
+        setDemoSnapshot(null);
+        setServiceMessage('No hay conexión con el servidor local de pruebas.');
+      });
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [working]);
+
+  const demoCommand = async (path: string, payload: Record<string, unknown>) => {
+    if (!demoSnapshot || working) return;
+    setWorking(true);
+    try {
+      await sendDemoCommand(path, demoSnapshot.revision, payload);
+      setDemoSnapshot(await getDemoSnapshot());
+      setServiceMessage('Operación ficticia guardada. La web y la app consultan la misma base local.');
+    } catch (error) {
+      setServiceMessage(error instanceof Error ? error.message : 'Operación de prueba no disponible.');
+      try { setDemoSnapshot(await getDemoSnapshot()); } catch { setDemoSnapshot(null); }
+    } finally { setWorking(false); }
+  };
+
+  const createDemoBooking = (tutor: PublicTutor) => {
+    // Sólo reservas ficticias para mayores de edad. No representa disponibilidad validada.
+    const startsAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+    void demoCommand('/v1/demo/bookings', {
+      tutorId: tutor.id, subject: tutor.subjects[0] || 'Tutoría de prueba',
+      mode: tutor.modes[0], startsAt,
+    });
+  };
 
   const visibleTutors = useMemo(() => catalog.items.filter((tutor) =>
     [tutor.name, tutor.specialty, ...tutor.subjects].join(' ').toLocaleLowerCase('es')
@@ -89,12 +132,54 @@ export default function App() {
                   <Text style={styles.cardSubtitle}>{tutor.specialty}</Text>
                   <Text style={styles.cardMeta}>{tutor.levels.join(' · ')}</Text>
                   <Text style={styles.cardMeta}>Modalidad: {tutor.modes.join(' / ')}</Text>
-                  <Text style={styles.cardFootnote}>Reservas disponibles tras habilitar autenticación y controles de seguridad.</Text>
+                  <Text style={styles.cardFootnote}>Sólo simulación local. Sin identidades ni clases reales.</Text>
+                  {catalog.source === 'demo' && demoSnapshot ? (
+                    <Pressable style={styles.demoAction} disabled={working} accessibilityRole="button"
+                      onPress={() => createDemoBooking(tutor)}>
+                      <Text style={styles.demoActionText}>Solicitar clase ficticia (+48 h)</Text>
+                    </Pressable>
+                  ) : null}
                 </View>
               </View>
             ))}
             {!isLoading && visibleTutors.length === 0 ? <Text style={styles.empty}>No hay resultados disponibles.</Text> : null}
           </>
+        ) : tab === 'agenda' && demoSnapshot ? (
+          <View style={styles.infoCard}>
+            <Text style={styles.heading}>Agenda sincronizada · simulación</Text>
+            <Text style={styles.secondary}>Revisión {demoSnapshot.revision} · Los mismos datos ficticios aparecen en la web local al sincronizar.</Text>
+            {demoSnapshot.bookings.length === 0 ? <Text style={styles.empty}>Sin reservas ficticias. Cree una en Explorar.</Text> : null}
+            {demoSnapshot.bookings.slice().reverse().map(booking => {
+              const tutor = catalog.items.find(item => item.id === booking.tutorId);
+              const commands: Array<{label:string;path:string;payload:Record<string,unknown>}> = [];
+              const prefix='/v1/demo/bookings/'+booking.id+'/';
+              if (booking.status === 'pending') commands.push({
+                label:'Simular aceptación del tutor',path:prefix+'decision',payload:{decision:'accept'},
+              });
+              if (booking.status === 'confirmed') commands.push({
+                label:'Simular fin de la clase',path:prefix+'complete',payload:{},
+              });
+              if (['pending','confirmed'].includes(booking.status)) commands.push({
+                label:'Reprogramar +2 días',path:prefix+'reschedule',
+                payload:{startsAt:new Date(new Date(booking.startsAt).getTime()+2*86400000).toISOString()},
+              });
+              if (['pending','confirmed','completed'].includes(booking.status)) commands.push({
+                label:'Reportar alerta ficticia',path:prefix+'incident',payload:{category:'safeguarding'},
+              });
+              return (
+                <View key={booking.id} style={styles.cardStack}>
+                  <Text style={styles.cardTitle}>{tutor?.name || 'Tutor ficticio'} · {booking.subject}</Text>
+                  <Text style={styles.cardMeta}>{new Date(booking.startsAt).toLocaleString('es-CO')} · {booking.status}</Text>
+                  {commands.map(command => (
+                    <Pressable key={command.path} accessibilityRole="button" style={styles.demoAction}
+                      disabled={working} onPress={() => { void demoCommand(command.path,command.payload); }}>
+                      <Text style={styles.demoActionText}>{command.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              );
+            })}
+          </View>
         ) : (
           <View style={styles.infoCard}>
             <Text style={styles.heading}>{tab === 'agenda' ? 'Agenda de clases' : 'Seguimiento académico'}</Text>
@@ -142,5 +227,8 @@ const styles = StyleSheet.create({
   cardFootnote: { fontSize: 11, lineHeight: 16, color: '#9a7532', marginTop: 11 },
   empty: { fontSize: 13, color: '#7b8d98', lineHeight: 20, paddingVertical: 16 },
   infoCard: { padding: 20, borderWidth: 1, borderColor: '#e4eaf0', borderRadius: 14, backgroundColor: '#fff' },
+  demoAction: { marginTop: 12, paddingVertical: 11, paddingHorizontal: 13, borderRadius: 9, backgroundColor: '#d9e8f1' },
+  demoActionText: { fontSize: 12, color: '#15435b', fontWeight: '800' },
+  cardStack: { padding: 14, backgroundColor: '#f1f6f9', borderRadius: 12, marginBottom: 10 },
   footer: { textAlign: 'center', fontSize: 10, color: '#52697a', paddingVertical: 14, paddingHorizontal: 12, backgroundColor: '#fff' },
 });
